@@ -7,28 +7,30 @@ import Characters from './components/Characters';
 import Pagination from './components/Pagination';
 
 function App() {
-  const [characters, setCharacters] = useState([]);
-  const [info, setInfo] = useState([]);
+  const [characters, setCharacters] = useState([]); //el useState nos da un estado de la app, el setcharacters es la funcion que modifica ese estado
+  const [info, setInfo] = useState([]);  //almacenar el objeto de info 
   const [search, setSearch] = useState("")
 
   const initialUrl = "https://rickandmortyapi.com/api/character";
 
 
-  const fetchCharacters = (url) => {
+  const fetchCharacters = (url) => { //llamada de red
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        setCharacters(data.results);
+        setCharacters(data.results); //se le da el array con los personajes o sea results. Se almacena el array de personajes
         setInfo(data.info);
       })
       .catch((error) => console.log(error));
   };
+
   const onPrevious = () => {
     fetchCharacters(info.prev);
   }
   const onNext = () => {
     fetchCharacters(info.next);
   }
+
   useEffect(() => {
     fetchCharacters(initialUrl);
   }, [])
@@ -38,12 +40,12 @@ function App() {
   }
   const filtrar = (searchTerm) => {
     var searchResult = characters.filter(function (element) {
-        if (element.species.toString().toLowerCase().includes(searchTerm.toLowerCase())
-          || element.location.name.toString().toLowerCase().includes(searchTerm.toLowerCase())
-          || element.name.toString().toLowerCase().includes(searchTerm.toLowerCase())) {
-          return element;
-        }
-      });
+      if (element.species.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        || element.location.name.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        || element.name.toString().toLowerCase().includes(searchTerm.toLowerCase())) {
+        return element;
+      }
+    });
     setInfo(searchResult);
   }
   return (
@@ -59,6 +61,7 @@ function App() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
+      
       <Navbar brand="Rick and Morty" />
       <div className="container">
         <Pagination prev={info.prev} next={info.next} onPrevious={onPrevious} onNext={onNext} />
